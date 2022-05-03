@@ -1,0 +1,7 @@
+C:\Users\Dioni\source\repos\Profa\obj\Debug\net6.0\Profa.csproj.AssemblyReference.cache
+C:\Users\Dioni\source\repos\Profa\obj\Debug\net6.0\Profa.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Dioni\source\repos\Profa\obj\Debug\net6.0\Profa.AssemblyInfoInputs.cache
+C:\Users\Dioni\source\repos\Profa\obj\Debug\net6.0\Profa.AssemblyInfo.cs
+C:\Users\Dioni\source\repos\Profa\obj\Debug\net6.0\Profa.csproj.CoreCompileInputs.cache
+C:\Users\Dioni\source\repos\Profa\obj\Debug\net6.0\Profa.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Dioni\source\repos\Profa\obj\Debug\net6.0\Profa.MvcApplicationPartsAssemblyInfo.cache
