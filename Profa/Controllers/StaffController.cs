@@ -17,49 +17,48 @@ namespace Profa.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<staff>>> Get()
+        public async static Task<ActionResult<List<staff>>> Get()
         {
-            return Ok(await dataContext.Staffs.ToListAsync());
+            using (var dataContext = new ProfaContext())
+                return await dataContext.Staffs.ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<staff>> Get(int id)
+        public async static Task<staff> GetStaffById(int id)
         {
-            var staff = await dataContext.Staffs.FindAsync(id);
-            if (staff == null) return BadRequest("Staff not found!");
-            return Ok(staff);
+            using (var dataContext = new ProfaContext())
+            {
+                return await dataContext.Staffs.FirstOrDefaultAsync( staff => staff.StaffId == id);
+            }
         }
         [HttpPost]
-        public async Task<ActionResult<List<staff>>> AddStaff(staff s)
+        public async static Task<bool> AddStaff(staff s)
         {
-            dataContext.Staffs.Add(s);
-            await dataContext.SaveChangesAsync();
+            using (var dataContext = new ProfaContext())
+                try{
+                    await dataContext.Staffs.AddAsync(s);
+                    return await dataContext.SaveChangesAsync() >=1;
+                }catch(Exception e){
+                    return false;
+                }
 
-            return Ok(await dataContext.Staffs.ToListAsync());
+            
         }
         [HttpPut]
-        public async Task<ActionResult<List<staff>>> UpdateStaff(staff request)
+        public async static Task<bool> UpdateStaff(staff s)
         {
-            var dbStaff = await dataContext.Staffs.FindAsync(request.StaffId);
-            if (dbStaff == null)
-                return BadRequest("Staff not found!");
-
-            dbStaff.StaffId = request.StaffId;
-            dbStaff.Firstname = IsNullOrEmpty(request.Firstname) ? dbStaff.Firstname : request.Firstname;
-            dbStaff.Surname = IsNullOrEmpty(request.Surname) ? dbStaff.Surname : request.Surname;
-            dbStaff.Email = IsNullOrEmpty(request.Email) ? dbStaff.Email : request.Email;
-            dbStaff.Age = (request.Age > 18) ? dbStaff.Age : request.Age;
-            dbStaff.Gjinia = IsNullOrEmpty(request.Gjinia) ? dbStaff.Gjinia : request.Gjinia;
-            dbStaff.Pass = IsNullOrEmpty(request.Pass) ? dbStaff.Pass : request.Pass;
-            dbStaff.PhoneNumber = IsNullOrEmpty(request.PhoneNumber) ? dbStaff.PhoneNumber : request.PhoneNumber;
-            dbStaff.Wage = (request.Wage > 350) ? dbStaff.Wage : request.Wage;
-            dbStaff.BranchId = (request.BranchId != 0) ? dbStaff.BranchId : request.BranchId;
+            using (var dataContext = new ProfaContext())
+                try
+                {
+                    dataContext.Staffs.Update(s);
+                    return await dataContext.SaveChangesAsync() >= 1;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
 
 
-
-            await dataContext.SaveChangesAsync();
-
-            return Ok(await dataContext.Staffs.ToListAsync());
         }
         private bool IsNullOrEmpty(string name)
         {
@@ -67,16 +66,20 @@ namespace Profa.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<staff>>> Delete(int id)
+        public async static Task<bool> DeleteStaff(int ID)
         {
-            var dbStaff = await dataContext.Staffs.FindAsync(id);
-            if (dbStaff == null)
-                return BadRequest("Staff not found!");
+            using (var dataContext = new ProfaContext())
+                try
+                {
+                    staff staffToDelte = await GetStaffById(ID);
+                    return await dataContext.SaveChangesAsync() >= 1;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
 
-            dataContext.Staffs.Remove(dbStaff);
-            await dataContext.SaveChangesAsync();
 
-            return Ok(await dataContext.Staffs.ToListAsync());
         }
     }
 }
