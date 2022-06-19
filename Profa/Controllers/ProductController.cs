@@ -17,70 +17,60 @@ namespace Profa.Controllers
         }
 
         [HttpGet]
-        public async static Task<ActionResult<List<Product>>> Get()
+        public async Task<ActionResult<List<Product>>> Get()
         {
-            using (var dataContext = new ProfaContext())
-                return await dataContext.Products.ToListAsync();
+            return Ok(await dataContext.Products.ToListAsync());
         }
 
         [HttpGet("{id}")]
-        public async static Task<Product> GetProductById(int id)
+        public async Task<ActionResult<Product>> Get(int id)
         {
-            using (var dataContext = new ProfaContext())
-            {
-                return await dataContext.Products.FirstOrDefaultAsync(staff => staff.ProductId == id);
-            }
+            var Product = await dataContext.Products.FindAsync(id);
+            if (Product == null) return BadRequest("Product not found!");
+            return Ok(Product);
         }
         [HttpPost]
-        public async static Task<bool> AddProduct(Product p)
+        public async Task<ActionResult<List<Product>>> AddProduct(Product p)
         {
-            using (var dataContext = new ProfaContext())
-                try
-                {
-                    await dataContext.Products.AddAsync(p);
-                    return await dataContext.SaveChangesAsync() >= 1;
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
+            dataContext.Products.Add(p);
+            await dataContext.SaveChangesAsync();
 
-
+            return Ok(await dataContext.Products.ToListAsync());
         }
         [HttpPut]
-        public async static Task<bool> UpdateProduct(Product p)
+        public async Task<ActionResult<List<Product>>> UpdateProduct(Product request)
         {
-            using (var dataContext = new ProfaContext())
-                try
-                {
-                    dataContext.Products.Update(p);
-                    return await dataContext.SaveChangesAsync() >= 1;
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
+            var dbProduct = await dataContext.Products.FindAsync(request.ProductId);
+            if (dbProduct == null)
+                return BadRequest("Product not found!");
+
+            dbProduct.ProductId = request.ProductId;
+            dbProduct.ProductType = IsNullOrEmpty(request.ProductType) ? dbProduct.ProductType : request.ProductType;
+            dbProduct.Amount = (request.Amount > 0) ? dbProduct.Amount : request.Amount;
+            dbProduct.Price = (request.Price > 0) ? dbProduct.Price : request.Price;
 
 
+
+            await dataContext.SaveChangesAsync();
+
+            return Ok(await dataContext.Products.ToListAsync());
         }
-        
+        private bool IsNullOrEmpty(string name)
+        {
+            return name == null || name == String.Empty;
+        }
 
         [HttpDelete("{id}")]
-        public async static Task<bool> DeleteProduct(int ID)
+        public async Task<ActionResult<List<Product>>> Delete(int id)
         {
-            using (var dataContext = new ProfaContext())
-                try
-                {
-                    Product productToDeleted = await GetProductById(ID);
-                    dataContext.Remove(productToDeleted);
-                    return await dataContext.SaveChangesAsync() >= 1;
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
+            var dbProduct = await dataContext.Products.FindAsync(id);
+            if (dbProduct == null)
+                return BadRequest("Product not found!");
 
+            dataContext.Products.Remove(dbProduct);
+            await dataContext.SaveChangesAsync();
 
+            return Ok(await dataContext.Products.ToListAsync());
         }
     }
 }

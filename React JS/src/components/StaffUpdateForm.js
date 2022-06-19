@@ -12,7 +12,6 @@ export default function StaffUpdateForm(props) {
         age: props.staff.age,
         gjinia: props.staff.gjinia,
         wage: props.staff.wage,
-        role: props.staff.role,
     });
 
   const [formData, setFormData] = useState(initialFormData);
@@ -39,8 +38,7 @@ const handleSubmit = (e) => {
         phoneNumber: formData.phoneNumber,
         age: formData.age,
         gjinia: formData.gjinia,
-        wage: formData.wage,
-        role: formData.role
+        wage: formData.wage
     };
 
     const url = Constants.API_URL_UPDATE_STAFF;
@@ -48,8 +46,8 @@ const handleSubmit = (e) => {
     fetch(url, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Content-Type': 'application/json'
+           
         },
         body: JSON.stringify(staffToUpdate)
       })
@@ -103,10 +101,6 @@ const handleSubmit = (e) => {
             <div className='mt-2'>
                 <label className='h5 form-label'>Staff wage</label>
                 <input value={formData.wage} name='wage' type="text" className="form-control" onChange={handleChange} />
-            </div> 
-            <div className='mt-2'>
-                <label className='h5 form-label'>Staff role</label>
-                <input value={formData.role} name='role' type="text" className="form-control" onChange={handleChange} />
             </div> 
 
             <button onClick={handleSubmit} className="btn btn-dark btn-lg w-100 mt-2">Submit</button>

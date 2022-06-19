@@ -12,10 +12,7 @@ function DepartmentTable()  {
     const url = Constants.API_URL_GET_ALL_DEPARTMENTS;
     
     fetch(url, {
-      method: 'GET',
-      headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
+      method: 'GET'
     })
     .then(response => response.json())
     .then(departmentsFromServer =>{
@@ -31,10 +28,7 @@ function DepartmentTable()  {
     const url = `${Constants.API_URL_DELETE_DEPARTMENT_BY_ID}/${departmentId}`;
     
     fetch(url, {
-      method: 'DELETE',
-      headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
+      method: 'DELETE'
     })
     .then(response => response.json())
     .then(responseFromServer =>{

@@ -12,10 +12,7 @@ function BranchTable()  {
     const url = Constants.API_URL_GET_ALL_BRANCHES;
     
     fetch(url, {
-      method: 'GET',
-      headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
+      method: 'GET'
     })
     .then(response => response.json())
     .then(branchesFromServer =>{
@@ -31,10 +28,7 @@ function BranchTable()  {
     const url = `${Constants.API_URL_DELETE_BRANCH_BY_ID}/${branchId}`;
     
     fetch(url, {
-      method: 'DELETE',
-      headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
+      method: 'DELETE'
     })
     .then(response => response.json())
     .then(responseFromServer =>{

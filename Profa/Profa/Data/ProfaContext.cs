@@ -18,6 +18,7 @@ namespace Profa.Models
 
         public virtual DbSet<Bill> Bills { get; set; } = null!;
         public virtual DbSet<Branch> Branches { get; set; } = null!;
+        public virtual DbSet<Complaint> Complaints { get; set; } = null!;
         public virtual DbSet<Customer> Customers { get; set; } = null!;
         public virtual DbSet<Department> Departments { get; set; } = null!;
         public virtual DbSet<ExtraHour> ExtraHours { get; set; } = null!;
@@ -26,7 +27,6 @@ namespace Profa.Models
         public virtual DbSet<Material> Materials { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
-        public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<StaffPayment> StaffPayments { get; set; } = null!;
         public virtual DbSet<Tool> Tools { get; set; } = null!;
         public virtual DbSet<Wood> Woods { get; set; } = null!;
@@ -78,6 +78,22 @@ namespace Profa.Models
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("Branch_Address");
+            });
+
+            modelBuilder.Entity<Complaint>(entity =>
+            {
+                entity.Property(e => e.ComplaintId).HasColumnName("Complaint_ID");
+
+                entity.Property(e => e.Complaints)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.StaffId).HasColumnName("Staff_ID");
+
+                entity.HasOne(d => d.Staff)
+                    .WithMany(p => p.Complaints)
+                    .HasForeignKey(d => d.StaffId)
+                    .HasConstraintName("FK__Complaint__Staff__160F4887");
             });
 
             modelBuilder.Entity<Customer>(entity =>
@@ -231,23 +247,6 @@ namespace Profa.Models
                     .HasConstraintName("FK__Reports__Staff_I__5441852A");
             });
 
-            modelBuilder.Entity<Role>(entity =>
-            {
-                entity.Property(e => e.RoleId).HasColumnName("Role_ID");
-
-                entity.Property(e => e.RoleName)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("Role_Name");
-
-                entity.Property(e => e.StaffId).HasColumnName("Staff_ID");
-
-                entity.HasOne(d => d.Staff)
-                    .WithMany(p => p.Roles)
-                    .HasForeignKey(d => d.StaffId)
-                    .HasConstraintName("FK__Roles__Staff_ID__49C3F6B7");
-            });
-
             modelBuilder.Entity<StaffPayment>(entity =>
             {
                 entity.HasKey(e => e.PaymentId)
@@ -309,6 +308,12 @@ namespace Profa.Models
             {
                 entity.ToTable("Staff");
 
+                entity.HasIndex(e => e.Email, "UQ__Staff__A9D10534438E31BB")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Email, "UQ__Staff__A9D10534D26ACE3E")
+                    .IsUnique();
+
                 entity.Property(e => e.StaffId).HasColumnName("Staff_ID");
 
                 entity.Property(e => e.BranchId).HasColumnName("Branch_ID");
@@ -334,6 +339,10 @@ namespace Profa.Models
                     .HasMaxLength(30)
                     .IsUnicode(false)
                     .HasColumnName("Phone_Number");
+
+                entity.Property(e => e.Role)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Surname)
                     .HasMaxLength(20)

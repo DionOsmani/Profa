@@ -28,10 +28,7 @@ function ProductTable()  {
     const url = `${Constants.API_URL_DELETE_PRODUCT_BY_ID}/${productId}`;
     
     fetch(url, {
-      method: 'DELETE',
-      headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
+      method: 'DELETE'
     })
     .then(response => response.json())
     .then(responseFromServer =>{
@@ -63,7 +60,7 @@ function renderProductTable(){
     return(
         
         <div className='w-75 mx-auto'>
-        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <button onClick={() => setShowingCreateNewProductForm(true)} className='btn btn-outline-dark btn-lg w-25 float-right'>Create new product</button>}
+        <button onClick={() => setShowingCreateNewProductForm(true)} className='btn btn-outline-dark btn-lg w-25 float-right'>Create new product</button>
         <table className='table table-hover table-striped w-100 p-3 mx-auto'>
             <thead className='thead-dark'>
                 <tr>
@@ -76,8 +73,8 @@ function renderProductTable(){
                     <th>Amount</th>
                     <th>Price</th>
                     <th>Total</th>
-                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Update</th>}
-                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Delete</th>}
+                    <th>Update</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -87,8 +84,8 @@ function renderProductTable(){
                         <td>{product.amount}</td>
                         <td>{product.price}$</td>
                         <td>{product.amount * product.price}$</td>
-                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => setProductCurrentlyBeingUpdated(product) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>}
-                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this product?`)) deleteProduct(product.productId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>}
+                        <td><button onClick={() => setProductCurrentlyBeingUpdated(product) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>
+                        <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this product?`)) deleteProduct(product.productId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>
                     </tr>
                 ))}
             </tbody>

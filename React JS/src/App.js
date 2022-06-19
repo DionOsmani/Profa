@@ -11,19 +11,6 @@ import Staff from './pages/Staff';
 import Departments from './pages/Departments';
 import Branches from './pages/Branches';
 import Products from './pages/Products';
-import Login from './pages/Login';
-import Bills from './pages/Bills';
-import Customers from './pages/Customers';
-import ExtraHour from './pages/ExtraHours';
-import Issues from './pages/Issues';
-import Machinery from './pages/Machinery';
-import Materials from './pages/Materials';
-import Reports from './pages/Reports';
-import StaffPayments from './pages/StaffPayments';
-
-
-
-
 function App() {
 
 
@@ -43,15 +30,6 @@ function App() {
             <Route exact path='/branches' element={<Branches />}></Route>
             <Route exact path='/departments' element={<Departments />}></Route>
             <Route exact path='/products' element={<Products />}></Route>
-            <Route exact path='/login' element={<Login />}></Route>
-            <Route exact path='/bills' element={<Bills />}></Route>
-            <Route exact path='/customers' element={<Customers />}></Route>
-            <Route exact path='/extraHour' element={<ExtraHour />}></Route>
-            <Route exact path='/issue' element={<Issues />}></Route>
-            <Route exact path='/machinery' element={<Machinery />}></Route>
-            <Route exact path='/materials' element={<Materials />}></Route>
-            <Route exact path='/reports' element={<Reports />}></Route>
-            <Route exact path='/staffPayments' element={<StaffPayments />}></Route>
           </Routes>
         </div>
 

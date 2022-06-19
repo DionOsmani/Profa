@@ -12,7 +12,6 @@ export default function StaffCreateForm(props) {
         age: '',
         gjinia: '',
         wage: '',
-        role: '',
     });
 
   const [formData, setFormData] = useState(initialFormData);
@@ -39,8 +38,7 @@ const handleSubmit = (e) => {
         phoneNumber: formData.phoneNumber,
         age: formData.age,
         gjinia: formData.gjinia,
-        wage: formData.wage,
-        role: formData.role
+        wage: formData.wage
     };
 
     const url = Constants.API_URL_CREATE_STAFF;
@@ -48,8 +46,7 @@ const handleSubmit = (e) => {
     fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Content-Type': 'application/json'
            
         },
         body: JSON.stringify(staffToCreate)
@@ -104,10 +101,6 @@ const handleSubmit = (e) => {
             <div className='mt-2'>
                 <label className='h5 form-label'>Staff wage</label>
                 <input value={formData.wage} name='wage' type="text" className="form-control" placeholder='Wage...' onChange={handleChange} />
-            </div> 
-            <div className='mt-2'>
-                <label className='h5 form-label'>Staff Role</label>
-                <input value={formData.role} name='role' type="text" className="form-control" placeholder='Role...' onChange={handleChange} />
             </div> 
 
             <button onClick={handleSubmit} className="btn btn-dark btn-lg w-100 mt-2">Submit</button>

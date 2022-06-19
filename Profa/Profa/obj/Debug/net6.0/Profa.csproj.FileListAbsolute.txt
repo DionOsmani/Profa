@@ -70,3 +70,8 @@ C:\Users\Dioni\source\repos\Profa\obj\Debug\net6.0\Profa.genruntimeconfig.cache
 C:\Users\Dioni\source\repos\Profa\obj\Debug\net6.0\ref\Profa.dll
 C:\Users\Dioni\source\repos\Profa\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.Design.dll
 C:\Users\Dioni\source\repos\Profa\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.Design.dll
+C:\Users\Dioni\source\repos\Profa\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Dioni\source\repos\Profa\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\Dioni\source\repos\Profa\bin\Debug\net6.0\Scrutor.dll
+C:\Users\Dioni\source\repos\Profa\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.dll
+C:\Users\Dioni\source\repos\Profa\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
