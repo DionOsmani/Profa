@@ -15,10 +15,6 @@ const Sidebar = () => {
             {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <Link className='link link-sidebar' to="/customers">Customers</Link>}
             {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <Link className='link link-sidebar' to="/extraHour">Extra Hours</Link>}
             {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <Link className='link link-sidebar' to="/issue">Issues</Link>}
-            {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <Link className='link link-sidebar' to="/machinery">Machinery</Link>}
-            {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <Link className='link link-sidebar' to="/materials">Materials</Link>}
-            {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <Link className='link link-sidebar' to="/reports">Reports</Link>}
-            {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <Link className='link link-sidebar' to="/staffPayments">Staff Payments</Link>}
             <Link className='link link-sidebar' to="/products">Product</Link>
             
         </div>
