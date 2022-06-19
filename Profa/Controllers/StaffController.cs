@@ -102,7 +102,7 @@ namespace Profa.Controllers
                 var dbStaff = dataContext.Staffs.Where(s => s.Email == staff.Email && s.Pass == password).FirstOrDefault();
                 if (dbStaff == null)
                 {
-                    return BadRequest("Email or password is incorrect");
+                    return BadRequest("");
                 }
 
                 string token = CreateToken(dbStaff);
@@ -110,7 +110,7 @@ namespace Profa.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("");
             }
 
 
@@ -120,8 +120,10 @@ namespace Profa.Controllers
         private string CreateToken(staff staff) {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, staff.Firstname),
-                new Claim(ClaimTypes.Email, staff.Email),
+                new Claim("Firstname", staff.Firstname),
+                new Claim("Surname", staff.Surname),
+                new Claim("Email", staff.Email),
+                new Claim("Role", staff.Role),
                 new Claim(ClaimTypes.Role, staff.Role)
             };
 

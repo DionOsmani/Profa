@@ -12,7 +12,10 @@ function StaffTable()  {
     const url = Constants.API_URL_GET_ALL_STAFFS;
     
     fetch(url, {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     })
     .then(response => response.json())
     .then(staffsFromServer =>{
@@ -20,6 +23,7 @@ function StaffTable()  {
       setStaff(staffsFromServer.value);
     })
     .catch((error) => {
+        alert(localStorage.getItem('token'))
       alert(error);
     });
   }
@@ -28,7 +32,10 @@ function StaffTable()  {
     const url = `${Constants.API_URL_DELETE_STAFF_BY_ID}/${staffId}`;
     
     fetch(url, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     })
     .then(response => response.json())
     .then(responseFromServer =>{
@@ -60,7 +67,7 @@ function renderStaffTable(){
     return(
         
         <div className='w-75 mx-auto'>
-        <button onClick={() => setShowingCreateNewStaffForm(true)} className='btn btn-outline-dark btn-lg w-25 float-right m-1'>Create new staff</button>
+        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <button onClick={() => setShowingCreateNewStaffForm(true)} className='btn btn-outline-dark btn-lg w-25 float-right m-1'>Create new staff</button>}
         <table className='table table-hover table-striped w-100 p-3 mx-auto'>
             <thead className='thead-dark'>
                 <tr>
@@ -76,8 +83,9 @@ function renderStaffTable(){
                     <th>Age</th>
                     <th>Gender</th>
                     <th>Wage</th>
-                    <th>Update</th>
-                    <th>Delete</th>
+                    <th>Role</th>                    
+                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Update</th>}
+                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Delete</th>}
                 </tr>
             </thead>
             <tbody>
@@ -90,8 +98,9 @@ function renderStaffTable(){
                         <td>{staff.age}</td>
                         <td>{staff.gjinia}</td>
                         <td>{staff.wage}</td>
-                        <td><button onClick={() => setStaffCurrentlyBeingUpdated(staff) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>
-                        <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete the staff named "${staff.firstname}"?`)) deleteStaff(staff.staffId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>
+                        <td>{staff.role}</td>
+                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => setStaffCurrentlyBeingUpdated(staff) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>}
+                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete the staff named "${staff.firstname}"?`)) deleteStaff(staff.staffId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>}
                     </tr>
                 ))}
             </tbody>

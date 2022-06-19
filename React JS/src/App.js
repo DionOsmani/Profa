@@ -11,6 +11,11 @@ import Staff from './pages/Staff';
 import Departments from './pages/Departments';
 import Branches from './pages/Branches';
 import Products from './pages/Products';
+import Login from './pages/Login';
+
+
+
+
 function App() {
 
 
@@ -30,6 +35,7 @@ function App() {
             <Route exact path='/branches' element={<Branches />}></Route>
             <Route exact path='/departments' element={<Departments />}></Route>
             <Route exact path='/products' element={<Products />}></Route>
+            <Route exact path='/login' element={<Login />}></Route>
           </Routes>
         </div>
 

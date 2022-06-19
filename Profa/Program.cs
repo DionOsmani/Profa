@@ -67,22 +67,23 @@ app.UseCors("CORSPolicy");
 
 
 
-app.MapGet("/get-all-staffs",[Authorize(Roles = "Admin")] async () => await StaffController.Get());
+app.MapGet("/get-all-staffs", async () => await StaffController.Get());
 
 app.MapGet("/get-staff-by-id/{postId}", async (int staffId) =>
-{ 
+{
     staff staffToReturn = await StaffController.GetStaffById(staffId);
 
     if (staffToReturn != null)
     {
         return Results.Ok(staffToReturn);
     }
-    else {
+    else
+    {
         return Results.BadRequest();
     }
 });
 
-app.MapPost("/create-staff", async (staff staffToCreate) =>
+app.MapPost("/create-staff", [Authorize(Roles = "Admin")] async (staff staffToCreate) =>
 {
     bool createSuccessfull = await StaffController.AddStaff(staffToCreate);
     if (createSuccessfull)
@@ -95,7 +96,8 @@ app.MapPost("/create-staff", async (staff staffToCreate) =>
     }
 });
 
-app.MapPut("/update-staff", async (staff staffToUpdate) =>
+
+app.MapPut("/update-staff", [Authorize(Roles = "Admin")] async (staff staffToUpdate) =>
 {
     bool updateSuccessful = await StaffController.UpdateStaff(staffToUpdate);
     if (updateSuccessful)
@@ -108,7 +110,7 @@ app.MapPut("/update-staff", async (staff staffToUpdate) =>
     }
 });
 
-app.MapDelete("/delete-staff-by-id/{staffId}", async (int staffId) =>
+app.MapDelete("/delete-staff-by-id/{staffId}", [Authorize(Roles = "Admin")] async (int staffId) =>
 {
     bool deleteSuccessfull = await StaffController.DeleteStaff(staffId);
     if (deleteSuccessfull)
@@ -120,6 +122,11 @@ app.MapDelete("/delete-staff-by-id/{staffId}", async (int staffId) =>
         return Results.BadRequest();
     }
 });
+
+
+
+
+
 
 
 app.MapGet("/get-all-products", async () => await ProductController.Get());
@@ -138,7 +145,7 @@ app.MapGet("/get-product-by-id/{ProductId}", async (int productId) =>
     }
 });
 
-app.MapPost("/create-product", async (Product productToCreate) =>
+app.MapPost("/create-product", [Authorize(Roles = "Admin")] async (Product productToCreate) =>
 {
     bool createSuccessful = await ProductController.AddProduct(productToCreate);
     if (createSuccessful)
@@ -151,7 +158,7 @@ app.MapPost("/create-product", async (Product productToCreate) =>
     }
 });
 
-app.MapPut("/update-product", async (Product productToUpdate) =>
+app.MapPut("/update-product", [Authorize(Roles = "Admin")] async (Product productToUpdate) =>
 {
     bool updateSuccessful = await ProductController.UpdateProduct(productToUpdate);
     if (updateSuccessful)
@@ -164,7 +171,7 @@ app.MapPut("/update-product", async (Product productToUpdate) =>
     }
 });
 
-app.MapDelete("/delete-product-by-id/{productId}", async (int productId) =>
+app.MapDelete("/delete-product-by-id/{productId}", [Authorize(Roles = "Admin")] async (int productId) =>
 {
     bool deleteSuccessful = await ProductController.DeleteProduct(productId);
     if (deleteSuccessful)
@@ -180,9 +187,9 @@ app.MapDelete("/delete-product-by-id/{productId}", async (int productId) =>
 
 
 
-app.MapGet("/get-all-departments", async () => await DepartmentController.Get());
+app.MapGet("/get-all-departments", [Authorize(Roles = "Admin")] async () => await DepartmentController.Get());
 
-app.MapGet("/get-department-by-id/{DepartmentId}", async (int departmentId) =>
+app.MapGet("/get-department-by-id/{DepartmentId}", [Authorize(Roles = "Admin")] async (int departmentId) =>
 {
     Department departmentToReturn = await DepartmentController.GetDepartmentById(departmentId);
 
@@ -196,7 +203,7 @@ app.MapGet("/get-department-by-id/{DepartmentId}", async (int departmentId) =>
     }
 });
 
-app.MapPost("/create-department", async (Department departmentToCreate) =>
+app.MapPost("/create-department", [Authorize(Roles = "Admin")] async (Department departmentToCreate) =>
 {
     bool createSuccessful = await DepartmentController.AddDepartment(departmentToCreate);
     if (createSuccessful)
@@ -209,7 +216,7 @@ app.MapPost("/create-department", async (Department departmentToCreate) =>
     }
 });
 
-app.MapPut("/update-department", async (Department departmentToUpdate) =>
+app.MapPut("/update-department", [Authorize(Roles = "Admin")] async (Department departmentToUpdate) =>
 {
     bool updateSuccessful = await DepartmentController.UpdateDepartment(departmentToUpdate);
     if (updateSuccessful)
@@ -222,7 +229,7 @@ app.MapPut("/update-department", async (Department departmentToUpdate) =>
     }
 });
 
-app.MapDelete("/delete-department-by-id/{departmentId}", async (int departmentId) =>
+app.MapDelete("/delete-department-by-id/{departmentId}", [Authorize(Roles = "Admin")] async (int departmentId) =>
 {
     bool deleteSuccessful = await DepartmentController.DeleteDepartment(departmentId);
     if (deleteSuccessful)
@@ -236,9 +243,9 @@ app.MapDelete("/delete-department-by-id/{departmentId}", async (int departmentId
 });
 
 
-app.MapGet("/get-all-branches", async () => await BranchController.Get());
+app.MapGet("/get-all-branches", [Authorize(Roles = "Admin")] async () => await BranchController.Get());
 
-app.MapGet("/get-branch-by-id/{BranchId}", async (int branchId) =>
+app.MapGet("/get-branch-by-id/{BranchId}", [Authorize(Roles = "Admin")] async (int branchId) =>
 {
     Branch branchToReturn = await BranchController.GetBranchById(branchId);
 
@@ -252,7 +259,7 @@ app.MapGet("/get-branch-by-id/{BranchId}", async (int branchId) =>
     }
 });
 
-app.MapPost("/create-branch", async (Branch branchToCreate) =>
+app.MapPost("/create-branch", [Authorize(Roles = "Admin")] async (Branch branchToCreate) =>
 {
     bool createSuccessful = await BranchController.AddBranch(branchToCreate);
     if (createSuccessful)
@@ -265,7 +272,7 @@ app.MapPost("/create-branch", async (Branch branchToCreate) =>
     }
 });
 
-app.MapPut("/update-branch", async (Branch branchToUpdate) =>
+app.MapPut("/update-branch", [Authorize(Roles = "Admin")] async (Branch branchToUpdate) =>
 {
     bool updateSuccessful = await BranchController.UpdateBranch(branchToUpdate);
     if (updateSuccessful)
@@ -278,7 +285,7 @@ app.MapPut("/update-branch", async (Branch branchToUpdate) =>
     }
 });
 
-app.MapDelete("/delete-branch-by-id/{branchId}", async (int branchId) =>
+app.MapDelete("/delete-branch-by-id/{branchId}", [Authorize(Roles = "Admin")] async (int branchId) =>
 {
     bool deleteSuccessful = await BranchController.DeleteBranch(branchId);
     if (deleteSuccessful)
