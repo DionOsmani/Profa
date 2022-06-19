@@ -65,7 +65,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("CORSPolicy");
 
-
+//===========================================================================================================
+//                                          STAFF
+//===========================================================================================================
 
 app.MapGet("/get-all-staffs", async () => await StaffController.Get());
 
@@ -123,12 +125,9 @@ app.MapDelete("/delete-staff-by-id/{staffId}", [Authorize(Roles = "Admin")] asyn
     }
 });
 
-
-
-
-
-
-
+//===========================================================================================================
+//                                          PRODUCTS
+//===========================================================================================================
 app.MapGet("/get-all-products", async () => await ProductController.Get());
 
 app.MapGet("/get-product-by-id/{ProductId}", async (int productId) =>
@@ -184,9 +183,9 @@ app.MapDelete("/delete-product-by-id/{productId}", [Authorize(Roles = "Admin")] 
     }
 });
 
-
-
-
+//===========================================================================================================
+//                                          DEPARTMENTS
+//===========================================================================================================
 app.MapGet("/get-all-departments", [Authorize(Roles = "Admin")] async () => await DepartmentController.Get());
 
 app.MapGet("/get-department-by-id/{DepartmentId}", [Authorize(Roles = "Admin")] async (int departmentId) =>
@@ -242,7 +241,9 @@ app.MapDelete("/delete-department-by-id/{departmentId}", [Authorize(Roles = "Adm
     }
 });
 
-
+//===========================================================================================================
+//                                          BRANCHES
+//===========================================================================================================
 app.MapGet("/get-all-branches", [Authorize(Roles = "Admin")] async () => await BranchController.Get());
 
 app.MapGet("/get-branch-by-id/{BranchId}", [Authorize(Roles = "Admin")] async (int branchId) =>
@@ -297,6 +298,241 @@ app.MapDelete("/delete-branch-by-id/{branchId}", [Authorize(Roles = "Admin")] as
         return Results.BadRequest();
     }
 });
+
+//===========================================================================================================
+//                                          ISSUES
+//===========================================================================================================
+
+app.MapGet("/get-all-issues", [Authorize(Roles = "Admin")] async () => await IssueController.Get());
+
+app.MapGet("/get-issue-by-id/{IssueId}", [Authorize(Roles = "Admin")] async (int issueId) =>
+{
+    Issue issueToReturn = await IssueController.GetIssueById(issueId);
+
+    if (issueToReturn != null)
+    {
+        return Results.Ok(issueToReturn);
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPost("/create-issue", [Authorize(Roles = "Admin")] async (Issue issueToCreate) =>
+{
+    bool createSuccessful = await IssueController.AddIssue(issueToCreate);
+    if (createSuccessful)
+    {
+        return Results.Ok("Insert Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPut("/update-issue", [Authorize(Roles = "Admin")] async (Issue issueToUpdate) =>
+{
+    bool updateSuccessful = await IssueController.UpdateIssue(issueToUpdate);
+    if (updateSuccessful)
+    {
+        return Results.Ok("Update Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapDelete("/delete-issue-by-id/{issueId}", [Authorize(Roles = "Admin")] async (int issueId) =>
+{
+    bool deleteSuccessful = await IssueController.DeleteIssue(issueId);
+    if (deleteSuccessful)
+    {
+        return Results.Ok("Delete Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+//===========================================================================================================
+//                                          EXTRA HOURS
+//===========================================================================================================
+app.MapGet("/get-all-extraHours", [Authorize(Roles = "Admin")] async () => await ExtraHourController.Get());
+
+app.MapGet("/get-extraHour-by-id/{HoursId}", [Authorize(Roles = "Admin")] async (int HoursId) =>
+{
+    ExtraHour extraHourToReturn = await ExtraHourController.GetExtraHourById(HoursId);
+
+    if (extraHourToReturn != null)
+    {
+        return Results.Ok(extraHourToReturn);
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPost("/create-extraHour", [Authorize(Roles = "Admin")] async (ExtraHour extraHourToCreate) =>
+{
+    bool createSuccessful = await ExtraHourController.AddExtraHour(extraHourToCreate);
+    if (createSuccessful)
+    {
+        return Results.Ok("Insert Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPut("/update-extraHour", [Authorize(Roles = "Admin")] async (ExtraHour extraHourToUpdate) =>
+{
+    bool updateSuccessful = await ExtraHourController.UpdateExtraHour(extraHourToUpdate);
+    if (updateSuccessful)
+    {
+        return Results.Ok("Update Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapDelete("/delete-extraHour-by-id/{HoursId}", [Authorize(Roles = "Admin")] async (int extraHourId) =>
+{
+    bool deleteSuccessful = await ExtraHourController.DeleteExtraHour(extraHourId);
+    if (deleteSuccessful)
+    {
+        return Results.Ok("Delete Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+//===========================================================================================================
+//                                          CUSTOMERS
+//===========================================================================================================
+app.MapGet("/get-all-customers", [Authorize(Roles = "Admin")] async () => await CustomerController.Get());
+
+app.MapGet("/get-customer-by-id/{HoursId}", [Authorize(Roles = "Admin")] async (int customerId) =>
+{
+    Customer customerToReturn = await CustomerController.GetCustomerById(customerId);
+
+    if (customerToReturn != null)
+    {
+        return Results.Ok(customerToReturn);
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPost("/create-customer", [Authorize(Roles = "Admin")] async (Customer customerToCreate) =>
+{
+    bool createSuccessful = await CustomerController.AddCustomer(customerToCreate);
+    if (createSuccessful)
+    {
+        return Results.Ok("Insert Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPut("/update-customer", [Authorize(Roles = "Admin")] async (Customer customerToUpdate) =>
+{
+    bool updateSuccessful = await CustomerController.UpdateCustomer(customerToUpdate);
+    if (updateSuccessful)
+    {
+        return Results.Ok("Update Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapDelete("/delete-customer-by-id/{customerId}", [Authorize(Roles = "Admin")] async (int customerId) =>
+{
+    bool deleteSuccessful = await CustomerController.DeleteCustomer(customerId);
+    if (deleteSuccessful)
+    {
+        return Results.Ok("Delete Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+//===========================================================================================================
+//                                          BILLS
+//===========================================================================================================
+app.MapGet("/get-all-bills", [Authorize(Roles = "Admin")] async () => await BillController.Get());
+
+app.MapGet("/get-bill-by-id/{billId}", [Authorize(Roles = "Admin")] async (int billId) =>
+{
+    Bill billToReturn = await BillController.GetBillById(billId);
+
+    if (billToReturn != null)
+    {
+        return Results.Ok(billToReturn);
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPost("/create-bill", [Authorize(Roles = "Admin")] async (Bill  billToCreate) =>
+{
+    bool createSuccessful = await BillController.AddBill(billToCreate);
+    if (createSuccessful)
+    {
+        return Results.Ok("Insert Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPut("/update-bill", [Authorize(Roles = "Admin")] async (Bill billToUpdate) =>
+{
+    bool updateSuccessful = await BillController.UpdateBill(billToUpdate);
+    if (updateSuccessful)
+    {
+        return Results.Ok("Update Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapDelete("/delete-bill-by-id/{billId}", [Authorize(Roles = "Admin")] async (int billId) =>
+{
+    bool deleteSuccessful = await BillController.DeleteBill(billId);
+    if (deleteSuccessful)
+    {
+        return Results.Ok("Delete Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+
 
 app.UseAuthentication();
 app.UseAuthorization();

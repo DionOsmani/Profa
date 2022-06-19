@@ -68,10 +68,7 @@ namespace Profa.Controllers
 
 
         }
-        private bool IsNullOrEmpty(string name)
-        {
-            return name == null || name == String.Empty;
-        }
+        
 
         [HttpDelete("{id}")]
         public async static Task<bool> DeleteStaff(int ID)
