@@ -17,41 +17,51 @@ namespace Profa.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Branch>>> Get()
+        public async static Task<ActionResult<List<Branch>>> Get()
         {
-            return Ok(await dataContext.Branches.ToListAsync());
+            using (var dataContext = new ProfaContext())
+                return await dataContext.Branches.ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Branch>> Get(int id)
+        public async static Task<Branch> GetBranchById(int id)
         {
-            var Branch = await dataContext.Branches.FindAsync(id);
-            if (Branch == null) return BadRequest("Branch not found!");
-            return Ok(Branch);
+            using (var dataContext = new ProfaContext())
+            {
+                return await dataContext.Branches.FirstOrDefaultAsync(Branch => Branch.BranchId == id);
+            }
         }
         [HttpPost]
-        public async Task<ActionResult<List<Branch>>> AddBranch(Branch b)
+        public async static Task<bool> AddBranch(Branch b)
         {
-            dataContext.Branches.Add(b);
-            await dataContext.SaveChangesAsync();
+            using (var dataContext = new ProfaContext())
+                try
+                {
+                    await dataContext.Branches.AddAsync(b);
+                    return await dataContext.SaveChangesAsync() >= 1;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
 
-            return Ok(await dataContext.Branches.ToListAsync());
+
         }
         [HttpPut]
-        public async Task<ActionResult<List<Branch>>> UpdateBranch(Branch request)
+        public async static Task<bool> UpdateBranch(Branch b)
         {
-            var dbBranch = await dataContext.Branches.FindAsync(request.BranchId);
-            if (dbBranch == null)
-                return BadRequest("Branch not found!");
+            using (var dataContext = new ProfaContext())
+                try
+                {
+                    dataContext.Branches.Update(b);
+                    return await dataContext.SaveChangesAsync() >= 1;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
 
-            dbBranch.BranchId = request.BranchId;
-            dbBranch.BranchAddress = IsNullOrEmpty(request.BranchAddress) ? dbBranch.BranchAddress : request.BranchAddress;
 
-
-
-            await dataContext.SaveChangesAsync();
-
-            return Ok(await dataContext.Branches.ToListAsync());
         }
         private bool IsNullOrEmpty(string name)
         {
@@ -59,16 +69,21 @@ namespace Profa.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Branch>>> Delete(int id)
+        public async static Task<bool> DeleteBranch(int ID)
         {
-            var dbBranch = await dataContext.Branches.FindAsync(id);
-            if (dbBranch == null)
-                return BadRequest("Branch not found!");
+            using (var dataContext = new ProfaContext())
+                try
+                {
+                    Branch branchToDeleted = await GetBranchById(ID);
+                    dataContext.Remove(branchToDeleted);
+                    return await dataContext.SaveChangesAsync() >= 1;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
 
-            dataContext.Branches.Remove(dbBranch);
-            await dataContext.SaveChangesAsync();
 
-            return Ok(await dataContext.Branches.ToListAsync());
         }
     }
 }

@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Profa.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Profa.Controllers
 {
@@ -11,10 +16,13 @@ namespace Profa.Controllers
     public class StaffController : ControllerBase
     {
         private readonly ProfaContext dataContext;
-        public StaffController(ProfaContext dataContext)
+        private readonly IConfiguration _configuration;
+        public StaffController(ProfaContext dataContext, IConfiguration configuration)
         {
             this.dataContext = dataContext;
+            _configuration = configuration;
         }
+
 
         [HttpGet]
         public async static Task<ActionResult<List<staff>>> Get()
@@ -36,13 +44,13 @@ namespace Profa.Controllers
         {
             using (var dataContext = new ProfaContext())
                 try{
-                    await dataContext.Staffs.AddAsync(s);
+                    s.Pass = hashPassword(s.Pass);
                     return await dataContext.SaveChangesAsync() >=1;
                 }catch(Exception e){
                     return false;
                 }
 
-            
+           
         }
         [HttpPut]
         public async static Task<bool> UpdateStaff(staff s)
@@ -71,7 +79,8 @@ namespace Profa.Controllers
             using (var dataContext = new ProfaContext())
                 try
                 {
-                    staff staffToDelte = await GetStaffById(ID);
+                    staff staffToDeleted = await GetStaffById(ID);
+                    dataContext.Remove(staffToDeleted);
                     return await dataContext.SaveChangesAsync() >= 1;
                 }
                 catch (Exception e)
@@ -81,5 +90,70 @@ namespace Profa.Controllers
 
 
         }
+
+
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> staffLogin([FromBody] StaffLogin staff) {
+
+            try
+            {
+                String password = hashPassword(staff.Pass);
+                var dbStaff = dataContext.Staffs.Where(s => s.Email == staff.Email && s.Pass == password).FirstOrDefault();
+                if (dbStaff == null)
+                {
+                    return BadRequest("Email or password is incorrect");
+                }
+
+                string token = CreateToken(dbStaff);
+                return Ok(token);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+
+            
+        }
+
+        private string CreateToken(staff staff) {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, staff.Firstname),
+                new Claim(ClaimTypes.Email, staff.Email),
+                new Claim(ClaimTypes.Role, staff.Role)
+            };
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+                _configuration.GetSection("AppSettings:Token").Value));
+
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: cred);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+
+            return jwt;
+        }
+
+
+
+
+
+
+
+        static string hashPassword(string password) {
+            var sha = SHA256.Create();
+            var asByteArray = Encoding.Default.GetBytes(password);
+            var hashedPassword =sha.ComputeHash(asByteArray);
+            return Convert.ToBase64String(hashedPassword);
+        }
+
+
     }
 }

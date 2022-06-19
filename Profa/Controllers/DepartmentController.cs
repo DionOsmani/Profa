@@ -17,42 +17,51 @@ namespace Profa.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Department>>> Get()
+        public async static Task<ActionResult<List<Department>>> Get()
         {
-            return Ok(await dataContext.Departments.ToListAsync());
+            using (var dataContext = new ProfaContext())
+                return await dataContext.Departments.ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Department>> Get(int id)
+        public async static Task<Department> GetDepartmentById(int id)
         {
-            var Department = await dataContext.Departments.FindAsync(id);
-            if (Department == null) return BadRequest("Department not found!");
-            return Ok(Department);
+            using (var dataContext = new ProfaContext())
+            {
+                return await dataContext.Departments.FirstOrDefaultAsync(Department => Department.DepartmentId == id);
+            }
         }
         [HttpPost]
-        public async Task<ActionResult<List<Department>>> AddDepartment(Department d)
+        public async static Task<bool> AddDepartment(Department d)
         {
-            dataContext.Departments.Add(d);
-            await dataContext.SaveChangesAsync();
+            using (var dataContext = new ProfaContext())
+                try
+                {
+                    await dataContext.Departments.AddAsync(d);
+                    return await dataContext.SaveChangesAsync() >= 1;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
 
-            return Ok(await dataContext.Departments.ToListAsync());
+
         }
         [HttpPut]
-        public async Task<ActionResult<List<Department>>> UpdateDepartment(Department request)
+        public async static Task<bool> UpdateDepartment(Department d)
         {
-            var dbDepartment = await dataContext.Departments.FindAsync(request.DepartmentId);
-            if (dbDepartment == null)
-                return BadRequest("Department not found!");
+            using (var dataContext = new ProfaContext())
+                try
+                {
+                    dataContext.Departments.Update(d);
+                    return await dataContext.SaveChangesAsync() >= 1;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
 
-            dbDepartment.DepartmentId = request.DepartmentId;
-            dbDepartment.Specialisation = IsNullOrEmpty(request.Specialisation) ? dbDepartment.Specialisation : request.Specialisation;
-            dbDepartment.BranchId =(request.BranchId==0) ? dbDepartment.BranchId : request.BranchId;
-            
 
-
-            await dataContext.SaveChangesAsync();
-
-            return Ok(await dataContext.Departments.ToListAsync());
         }
         private bool IsNullOrEmpty(string name)
         {
@@ -60,16 +69,21 @@ namespace Profa.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Department>>> Delete(int id)
+        public async static Task<bool> DeleteDepartment(int ID)
         {
-            var dbDepartment = await dataContext.Departments.FindAsync(id);
-            if (dbDepartment == null)
-                return BadRequest("Department not found!");
+            using (var dataContext = new ProfaContext())
+                try
+                {
+                    Department departmentToDeleted = await GetDepartmentById(ID);
+                    dataContext.Remove(departmentToDeleted);
+                    return await dataContext.SaveChangesAsync() >= 1;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
 
-            dataContext.Departments.Remove(dbDepartment);
-            await dataContext.SaveChangesAsync();
 
-            return Ok(await dataContext.Departments.ToListAsync());
         }
     }
 }
