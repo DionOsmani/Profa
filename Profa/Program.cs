@@ -421,7 +421,7 @@ app.MapDelete("/delete-extraHour-by-id/{HoursId}", [Authorize(Roles = "Admin")] 
 //===========================================================================================================
 app.MapGet("/get-all-customers", [Authorize(Roles = "Admin")] async () => await CustomerController.Get());
 
-app.MapGet("/get-customer-by-id/{HoursId}", [Authorize(Roles = "Admin")] async (int customerId) =>
+app.MapGet("/get-customer-by-id/{customerId}", [Authorize(Roles = "Admin")] async (int customerId) =>
 {
     Customer customerToReturn = await CustomerController.GetCustomerById(customerId);
 
@@ -531,6 +531,242 @@ app.MapDelete("/delete-bill-by-id/{billId}", [Authorize(Roles = "Admin")] async 
         return Results.BadRequest();
     }
 });
+
+
+//===========================================================================================================
+//                                          MACHINERY
+//===========================================================================================================
+app.MapGet("/get-all-machineries", [Authorize(Roles = "Admin")] async () => await MachineryController.Get());
+
+app.MapGet("/get-machinery-by-id/{machineryId}", [Authorize(Roles = "Admin")] async (int machineryId) =>
+{
+    Machinery machineryToReturn = await MachineryController.GetMachineryById(machineryId);
+
+    if (machineryToReturn != null)
+    {
+        return Results.Ok(machineryToReturn);
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPost("/create-machinery", [Authorize(Roles = "Admin")] async (Machinery machineryToCreate) =>
+{
+    bool createSuccessful = await MachineryController.AddMachinery(machineryToCreate);
+    if (createSuccessful)
+    {
+        return Results.Ok("Insert Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPut("/update-machinery", [Authorize(Roles = "Admin")] async (Machinery machineryToUpdate) =>
+{
+    bool updateSuccessful = await MachineryController.UpdateMachinery(machineryToUpdate);
+    if (updateSuccessful)
+    {
+        return Results.Ok("Update Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapDelete("/delete-machinery-by-id/{machineryId}", [Authorize(Roles = "Admin")] async (int machineryId) =>
+{
+    bool deleteSuccessful = await MachineryController.DeleteMachinery(machineryId);
+    if (deleteSuccessful)
+    {
+        return Results.Ok("Delete Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+//===========================================================================================================
+//                                          MATERIAL
+//===========================================================================================================
+app.MapGet("/get-all-materials", [Authorize(Roles = "Admin")] async () => await MaterialController.Get());
+
+app.MapGet("/get-material-by-id/{materialId}", [Authorize(Roles = "Admin")] async (int materialId) =>
+{
+    Material materialToReturn = await MaterialController.GetMaterialById(materialId);
+
+    if (materialToReturn != null)
+    {
+        return Results.Ok(materialToReturn);
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPost("/create-material", [Authorize(Roles = "Admin")] async (Material materialToCreate) =>
+{
+    bool createSuccessful = await MaterialController.AddMaterial(materialToCreate);
+    if (createSuccessful)
+    {
+        return Results.Ok("Insert Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPut("/update-material", [Authorize(Roles = "Admin")] async (Material materialToUpdate) =>
+{
+    bool updateSuccessful = await MaterialController.UpdateMaterial(materialToUpdate);
+    if (updateSuccessful)
+    {
+        return Results.Ok("Update Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapDelete("/delete-material-by-id/{materialId}", [Authorize(Roles = "Admin")] async (int materialId) =>
+{
+    bool deleteSuccessful = await MaterialController.DeleteMaterial(materialId);
+    if (deleteSuccessful)
+    {
+        return Results.Ok("Delete Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+//===========================================================================================================
+//                                          REPORT
+//===========================================================================================================
+app.MapGet("/get-all-reports", [Authorize(Roles = "Admin")] async () => await ReportController.Get());
+
+app.MapGet("/get-report-by-id/{reportId}", [Authorize(Roles = "Admin")] async (int reportId) =>
+{
+    Report reportToReturn = await ReportController.GetReportById(reportId);
+
+    if (reportToReturn != null)
+    {
+        return Results.Ok(reportToReturn);
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPost("/create-report", [Authorize(Roles = "Admin")] async (Report reportToCreate) =>
+{
+    bool createSuccessful = await ReportController.AddReport(reportToCreate);
+    if (createSuccessful)
+    {
+        return Results.Ok("Insert Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPut("/update-report", [Authorize(Roles = "Admin")] async (Report reportToUpdate) =>
+{
+    bool updateSuccessful = await ReportController.UpdateReport(reportToUpdate);
+    if (updateSuccessful)
+    {
+        return Results.Ok("Update Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapDelete("/delete-report-by-id/{reportId}", [Authorize(Roles = "Admin")] async (int reportId) =>
+{
+    bool deleteSuccessful = await ReportController.DeleteReport(reportId);
+    if (deleteSuccessful)
+    {
+        return Results.Ok("Delete Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+//===========================================================================================================
+//                                          StaffPayment
+//===========================================================================================================
+app.MapGet("/get-all-staffPayments", [Authorize(Roles = "Admin")] async () => await StaffPaymentController.Get());
+
+app.MapGet("/get-staffPayment-by-id/{staffPaymentId}", [Authorize(Roles = "Admin")] async (int staffPaymentId) =>
+{
+    StaffPayment staffPaymentToReturn = await StaffPaymentController.GetStaffPaymentById(staffPaymentId);
+
+    if (staffPaymentToReturn != null)
+    {
+        return Results.Ok(staffPaymentToReturn);
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPost("/create-staffPayment", [Authorize(Roles = "Admin")] async (StaffPayment staffPaymentToCreate) =>
+{
+    bool createSuccessful = await StaffPaymentController.AddStaffPayment(staffPaymentToCreate);
+    if (createSuccessful)
+    {
+        return Results.Ok("Insert Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapPut("/update-staffPayment", [Authorize(Roles = "Admin")] async (StaffPayment staffPaymentToUpdate) =>
+{
+    bool updateSuccessful = await StaffPaymentController.UpdateStaffPayment(staffPaymentToUpdate);
+    if (updateSuccessful)
+    {
+        return Results.Ok("Update Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+app.MapDelete("/delete-staffPayment-by-id/{staffPaymentId}", [Authorize(Roles = "Admin")] async (int staffPaymentId) =>
+{
+    bool deleteSuccessful = await StaffPaymentController.DeleteStaffPayment(staffPaymentId);
+    if (deleteSuccessful)
+    {
+        return Results.Ok("Delete Successful");
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
+});
+
+
+
 
 
 

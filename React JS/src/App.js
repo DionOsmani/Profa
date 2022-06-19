@@ -16,6 +16,10 @@ import Bills from './pages/Bills';
 import Customers from './pages/Customers';
 import ExtraHour from './pages/ExtraHours';
 import Issues from './pages/Issues';
+import Machinery from './pages/Machinery';
+import Materials from './pages/Materials';
+import Reports from './pages/Reports';
+import StaffPayments from './pages/StaffPayments';
 
 
 
@@ -44,6 +48,10 @@ function App() {
             <Route exact path='/customers' element={<Customers />}></Route>
             <Route exact path='/extraHour' element={<ExtraHour />}></Route>
             <Route exact path='/issue' element={<Issues />}></Route>
+            <Route exact path='/machinery' element={<Machinery />}></Route>
+            <Route exact path='/materials' element={<Materials />}></Route>
+            <Route exact path='/reports' element={<Reports />}></Route>
+            <Route exact path='/staffPayments' element={<StaffPayments />}></Route>
           </Routes>
         </div>
 
