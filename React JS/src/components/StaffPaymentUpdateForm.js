@@ -22,7 +22,7 @@ const handleSubmit = (e) => {
     e.preventDefault();
 
     const staffPaymentToUpdate = {
-        staffPaymentId: props.staffPayment.staffPaymentId,
+        paymentId: props.staffPayment.paymentId,
         paymentDate: formData.paymentDate,
         staffId: formData.staffId
     };

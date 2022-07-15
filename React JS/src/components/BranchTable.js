@@ -12,7 +12,10 @@ function BranchTable()  {
     const url = Constants.API_URL_GET_ALL_BRANCHES;
     
     fetch(url, {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     })
     .then(response => response.json())
     .then(branchesFromServer =>{
@@ -28,7 +31,10 @@ function BranchTable()  {
     const url = `${Constants.API_URL_DELETE_BRANCH_BY_ID}/${branchId}`;
     
     fetch(url, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     })
     .then(response => response.json())
     .then(responseFromServer =>{
@@ -48,11 +54,20 @@ return (
     getBranch();
   }, [])}
         
-        {(branches.length>0 && showingCreateNewBranchForm === false && branchCurrentlyBeingUpdated === null) && renderBranchTable() }
+        {(branches.length>0 && showingCreateNewBranchForm === false && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin" ) 
+        && branchCurrentlyBeingUpdated === null) && renderBranchTable() }
         
-        {showingCreateNewBranchForm && <BranchCreateForm onBranchCreated={onBranchCreated}/>}
+        {showingCreateNewBranchForm&& (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin" ) 
+        && <BranchCreateForm onBranchCreated={onBranchCreated}/>}
 
-        {branchCurrentlyBeingUpdated!==null&& <BranchUpdateForm branch={branchCurrentlyBeingUpdated} onBranchUpdated={onBranchUpdated} />}
+        {branchCurrentlyBeingUpdated!==null && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin" ) 
+        && <BranchUpdateForm branch={branchCurrentlyBeingUpdated} onBranchUpdated={onBranchUpdated} />}
     </div>
   )
   

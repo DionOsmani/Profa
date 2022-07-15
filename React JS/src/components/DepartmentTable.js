@@ -5,14 +5,19 @@ import DepartmentUpdateForm from './DepartmentUpdateForm';
 
 function DepartmentTable()  {
     const [departments, setDepartment] = useState([]);
+    const [departmentsOfBranch, setDepartmentsOfBranch] = useState([]);
     const [showingCreateNewDepartmentForm, setShowingCreateNewDepartmentForm] = useState(false);
     const [departmentCurrentlyBeingUpdated, setDepartmentCurrentlyBeingUpdated] = useState(null);
+    const [ViewBranchDepartments, setViewBranchDepartments] = useState(0);
 
     function getDepartment(){
     const url = Constants.API_URL_GET_ALL_DEPARTMENTS;
     
     fetch(url, {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     })
     .then(response => response.json())
     .then(departmentsFromServer =>{
@@ -24,11 +29,35 @@ function DepartmentTable()  {
     });
   }
 
+
+  function getDepartmentsByBranch(branchId){
+    const url = `${Constants.API_URL_GET_DEPARTMENTS_BY_BRANCH_ID}/${branchId}`;
+    
+    fetch(url, {
+      method: 'GET',
+      headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+    .then(response => response.json())
+    .then(departmentsFromServer =>{
+      console.log(departmentsFromServer);
+      setDepartmentsOfBranch(departmentsFromServer);
+    })
+    .catch((error) => {
+      alert(error);
+    });
+  }
+
+
   function deleteDepartment(departmentId){
     const url = `${Constants.API_URL_DELETE_DEPARTMENT_BY_ID}/${departmentId}`;
     
     fetch(url, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     })
     .then(response => response.json())
     .then(responseFromServer =>{
@@ -47,15 +76,78 @@ return (
        { useEffect(() => {
     getDepartment();
   }, [])}
-        
-        {(departments.length>0 && showingCreateNewDepartmentForm === false && departmentCurrentlyBeingUpdated === null) && renderDepartmentTable() }
-        
-        {showingCreateNewDepartmentForm && <DepartmentCreateForm onDepartmentCreated={onDepartmentCreated}/>}
 
-        {departmentCurrentlyBeingUpdated!==null&& <DepartmentUpdateForm department={departmentCurrentlyBeingUpdated} onDepartmentUpdated={onDepartmentUpdated} />}
+
+        
+        {(departments.length>0 && showingCreateNewDepartmentForm === false && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead" ) && departmentCurrentlyBeingUpdated === null) 
+        && ViewBranchDepartments===0 && renderDepartmentTable() }
+        
+        {showingCreateNewDepartmentForm && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead" ) 
+        && <DepartmentCreateForm onDepartmentCreated={onDepartmentCreated}/>}
+
+        {departmentCurrentlyBeingUpdated!==null&& (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead" )
+        && <DepartmentUpdateForm department={departmentCurrentlyBeingUpdated} onDepartmentUpdated={onDepartmentUpdated} />}
+
+        {ViewBranchDepartments!==0&& (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead" )
+        && renderDepartmentsByBranchTable()}
+
+    
+
     </div>
   )
   
+
+  function renderDepartmentsByBranchTable(){
+    return(
+        
+        <div className='mx-auto w-75'>
+        <table className='table table-hover table-striped w-100 p-3 mx-auto'>
+            <thead className='thead-dark'>
+                <tr>
+                    <th colSpan={9}>
+                        <h4>Department</h4>
+                    </th>
+                </tr>
+                <tr>
+                    <th>Specialisation</th>
+                    <th>Branch ID</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {departmentsOfBranch.map((department) => (
+                    <tr key={department.departmentId}>
+                        <td>{department.specialisation}</td>
+                        <td>{department.branchId}</td>
+                        <td><button onClick={() => setDepartmentCurrentlyBeingUpdated(department) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>
+                        <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this department?`)) deleteDepartment(department.departmentId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+
+    </div>
+    )
+    
+}
+
+
+
+
+
 function renderDepartmentTable(){
     return(
         
@@ -73,6 +165,7 @@ function renderDepartmentTable(){
                     <th>Branch ID</th>
                     <th>Update</th>
                     <th>Delete</th>
+                    <th>View Branch Departments</th>
                 </tr>
             </thead>
             <tbody>
@@ -82,6 +175,7 @@ function renderDepartmentTable(){
                         <td>{department.branchId}</td>
                         <td><button onClick={() => setDepartmentCurrentlyBeingUpdated(department) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>
                         <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this department?`)) deleteDepartment(department.departmentId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>
+                        <td><button onClick={() => {setViewBranchDepartments(department.branchId);getDepartmentsByBranch(department.branchId)}} className='btn btn-secondary btn-lg mx-3 my-3'>View Branch Departments</button></td>
                     </tr>
                 ))}
             </tbody>
@@ -104,6 +198,7 @@ function onDepartmentCreated(createdDepartment){
     alert('Department successfully created');
 
     getDepartment();
+    getDepartmentsByBranch();
 }
 
 function onDepartmentUpdated(updatedDepartment){
@@ -127,6 +222,8 @@ function onDepartmentUpdated(updatedDepartment){
     alert('Department successfully updated');
 
     getDepartment();
+    getDepartmentsByBranch();
+
 }
 
 
@@ -146,6 +243,8 @@ function onDepartmentDeleted(deletedDepartmentDepartmentId){
     alert('Department successfully deleted');
 
     getDepartment();
+    getDepartmentsByBranch();
+
 }
 
 }

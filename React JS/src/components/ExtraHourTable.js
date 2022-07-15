@@ -55,11 +55,32 @@ return (
     getExtraHour();
   }, [])}
         
-        {(extraHours.length>0 && showingCreateNewExtraHourForm === false && extraHourCurrentlyBeingUpdated === null) && renderExtraHourTable() }
+        {(extraHours.length>0 && showingCreateNewExtraHourForm === false && localStorage.getItem('token')  && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead"  ||
+        localStorage.getItem('Role')==="dHead" ||
+        localStorage.getItem('Role')==="worker"||
+        localStorage.getItem('Role')==="secretary") 
+        && extraHourCurrentlyBeingUpdated === null) && renderExtraHourTable() }
         
-        {showingCreateNewExtraHourForm && <ExtraHourCreateForm onExtraHourCreated={onExtraHourCreated}/>}
+        {showingCreateNewExtraHourForm && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead"  ||
+        localStorage.getItem('Role')==="dHead" ||
+        localStorage.getItem('Role')==="worker"||
+        localStorage.getItem('Role')==="secretary") 
+        && <ExtraHourCreateForm onExtraHourCreated={onExtraHourCreated}/>}
 
-        {extraHourCurrentlyBeingUpdated!==null&& <ExtraHourUpdateForm extraHour={extraHourCurrentlyBeingUpdated} onExtraHourUpdated={onExtraHourUpdated} />}
+        {extraHourCurrentlyBeingUpdated!==null && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead"  ||
+        localStorage.getItem('Role')==="dHead" ||
+        localStorage.getItem('Role')==="worker"||
+        localStorage.getItem('Role')==="secretary") 
+        && <ExtraHourUpdateForm extraHour={extraHourCurrentlyBeingUpdated} onExtraHourUpdated={onExtraHourUpdated} />}
     </div>
   )
   
@@ -67,36 +88,50 @@ function renderExtraHourTable(){
     return(
         
         <div className='w-75 mx-auto'>
-        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <button onClick={() => setShowingCreateNewExtraHourForm(true)} className='btn btn-outline-dark btn-lg w-25 float-right m-1'>Create new extraHour</button>}
-        <table className='table table-hover table-striped w-100 p-3 mx-auto'>
-            <thead className='thead-dark'>
-                <tr>
-                    <th colSpan={9}>
-                        <h4>ExtraHour</h4>
-                    </th>
-                </tr>
-                <tr>
-                    <th>Date</th>
-                    <th>Hours</th>
-                    <th>Staff ID</th>                 
-                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Update</th>}
-                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Delete</th>}
-                </tr>
-            </thead>
-            <tbody>
-                {extraHours.map((extraHour) => (
-                    <tr key={extraHour.hoursId}>
-                        <td>{extraHour.hoursDate}</td>
-                        <td>{extraHour.hoursAmount}</td>
-                        <td>{extraHour.staffId}</td>
-                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => setExtraHourCurrentlyBeingUpdated(extraHour) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>}
-                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this extraHour?`)) deleteExtraHour(extraHour.hoursId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>}
-                    </tr>
-                ))}
-            </tbody>
-        </table>
+            <button onClick={() => setShowingCreateNewExtraHourForm(true)} className='btn btn-outline-dark btn-lg w-25 float-right m-1'>Create new extraHour</button>
 
-    </div>
+            <table className='table table-hover table-striped w-100 p-3 mx-auto'>
+                <thead className='thead-dark'>
+                    <tr>
+                        <th colSpan={9}>
+                            <h4>ExtraHour</h4>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <th>Hours</th>
+                        <th>Staff ID</th>
+                        <th>Update</th>
+
+
+
+                        {localStorage.getItem('token')  && (
+                        localStorage.getItem('Role')==="Admin" ||
+                        localStorage.getItem('Role')==="HeadAdmin") 
+                        && <th>Delete</th>}
+                    </tr>
+                </thead>
+                <tbody>
+                    {extraHours.map((extraHour) => (
+                        <tr key={extraHour.hoursId}>
+                            <td>{extraHour.hoursDate}</td>
+                            <td>{extraHour.hoursAmount}</td>
+                            <td>{extraHour.staffId}</td>
+                            <td><button onClick={() => setExtraHourCurrentlyBeingUpdated(extraHour) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>
+                            {localStorage.getItem('token') && (
+                            localStorage.getItem('Role')==="Admin" ||
+                            localStorage.getItem('Role')==="HeadAdmin") 
+                            && <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this extraHour?`)) deleteExtraHour(extraHour.hoursId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>}
+                        
+                        
+                        
+                        
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+        </div>
     )
 
     

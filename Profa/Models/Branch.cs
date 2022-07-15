@@ -8,6 +8,7 @@ namespace Profa.Models
         public Branch()
         {
             Departments = new HashSet<Department>();
+            Woods = new HashSet<Wood>();
             staff = new HashSet<staff>();
         }
 
@@ -15,6 +16,7 @@ namespace Profa.Models
         public string BranchAddress { get; set; } = null!;
 
         public virtual ICollection<Department> Departments { get; set; }
+        public virtual ICollection<Wood> Woods { get; set; }
         public virtual ICollection<staff> staff { get; set; }
     }
 }

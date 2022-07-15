@@ -39,8 +39,8 @@ function StaffPaymentTable()  {
     })
     .then(response => response.json())
     .then(responseFromServer =>{
-      console.log(responseFromServer);
-      onStaffPaymentDeleted(paymentId);
+        console.log(responseFromServer);
+        onStaffPaymentDeleted(paymentId);
     })
     .catch((error) => {
         console.log(error);
@@ -55,11 +55,20 @@ return (
     getStaffPayment();
   }, [])}
         
-        {(staffPayments.length>0 && showingCreateNewStaffPaymentForm === false && staffPaymentCurrentlyBeingUpdated === null) && renderStaffPaymentTable() }
+        {(staffPayments.length>0 && showingCreateNewStaffPaymentForm === false && staffPaymentCurrentlyBeingUpdated === null) && localStorage.getItem('token') && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin")  
+        && renderStaffPaymentTable() }
         
-        {showingCreateNewStaffPaymentForm && <StaffPaymentCreateForm onStaffPaymentCreated={onStaffPaymentCreated}/>}
+        {showingCreateNewStaffPaymentForm && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin")  
+        && <StaffPaymentCreateForm onStaffPaymentCreated={onStaffPaymentCreated}/>}
 
-        {staffPaymentCurrentlyBeingUpdated!==null&& <StaffPaymentUpdateForm staffPayment={staffPaymentCurrentlyBeingUpdated} onStaffPaymentUpdated={onStaffPaymentUpdated} />}
+        {staffPaymentCurrentlyBeingUpdated!==null && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin")  
+        && <StaffPaymentUpdateForm staffPayment={staffPaymentCurrentlyBeingUpdated} onStaffPaymentUpdated={onStaffPaymentUpdated} />}
     </div>
   )
   
@@ -67,7 +76,7 @@ function renderStaffPaymentTable(){
     return(
         
         <div className='w-75 mx-auto'>
-        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <button onClick={() => setShowingCreateNewStaffPaymentForm(true)} className='btn btn-outline-dark btn-lg w-25 float-right m-1'>Create new staffPayment</button>}
+        <button onClick={() => setShowingCreateNewStaffPaymentForm(true)} className='btn btn-outline-dark btn-lg w-25 float-right m-1'>Create new staffPayment</button>
         <table className='table table-hover table-striped w-100 p-3 mx-auto'>
             <thead className='thead-dark'>
                 <tr>
@@ -78,8 +87,8 @@ function renderStaffPaymentTable(){
                 <tr>
                     <th>Date</th>
                     <th>Staff ID</th>                 
-                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Update</th>}
-                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Delete</th>}
+                    <th>Update</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -87,8 +96,8 @@ function renderStaffPaymentTable(){
                     <tr key={staffPayment.paymentId}>
                         <td>{staffPayment.paymentDate}</td>
                         <td>{staffPayment.staffId}</td>
-                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => setStaffPaymentCurrentlyBeingUpdated(staffPayment) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>}
-                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this staffPayment?`)) deleteStaffPayment(staffPayment.staffPaymentId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>}
+                        <td><button onClick={() => setStaffPaymentCurrentlyBeingUpdated(staffPayment) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>
+                        <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this staffPayment?`)) deleteStaffPayment(staffPayment.paymentId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>
                     </tr>
                 ))}
             </tbody>
@@ -122,7 +131,7 @@ function onStaffPaymentUpdated(updatedStaffPayment){
     let staffPaymentsCopy=[...staffPayments];
 
     const index = staffPaymentsCopy.findIndex((staffPaymentsCopyStaffPayment, currentIndex) => {
-        if(staffPaymentsCopyStaffPayment.staffPaymentId === updatedStaffPayment.staffPaymentId){
+        if(staffPaymentsCopyStaffPayment.paymentId === updatedStaffPayment.paymentId){
             return true;
         }
     });
@@ -141,7 +150,7 @@ function onStaffPaymentDeleted(deletedStaffPaymentStaffPaymentId){
     let staffPaymentsCopy=[...staffPayments];
 
     const index = staffPaymentsCopy.findIndex((staffPaymentsCopyStaffPayment, currentIndex) => {
-        if(staffPaymentsCopyStaffPayment.staffPaymentId === deletedStaffPaymentStaffPaymentId){
+        if(staffPaymentsCopyStaffPayment.paymentId === deletedStaffPaymentStaffPaymentId){
             return true;
         }
     });

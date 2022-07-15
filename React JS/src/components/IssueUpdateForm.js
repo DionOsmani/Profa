@@ -3,7 +3,7 @@ import Constants from '../utilities/Constants'
 
 export default function IssueUpdateForm(props) {
     const initialFormData = Object.freeze({
-        issue: props.issue.issue,
+      issues: props.issue.issues,
         staffId: props.issue.staffId
     });
 
@@ -23,7 +23,7 @@ const handleSubmit = (e) => {
 
     const issueToUpdate = {
         issuesId: props.issue.issuesId,
-        issue: formData.issue,
+        issues: formData.issues,
         staffId: formData.staffId
     };
 
@@ -53,11 +53,11 @@ const handleSubmit = (e) => {
         <form className='w-50 mx-auto'>
             <h2 className='mt-2'>Updating issue</h2>
             <div className='mt-2'>
-                <label className='h5 form-label'>Issue Date</label>
-                <input value={formData.issue} name='issue' type="date" className="form-control" placeholder='Date...' onChange={handleChange} />
+                <label className='h5 form-label'>Issue</label>
+                <input value={formData.issues} name='issues' type="text" className="form-control" placeholder='Issue...' onChange={handleChange} />
             </div>
             <div className='mt-2'>
-                <label className='h5 form-label'>Product ID</label>
+                <label className='h5 form-label'>Staff ID</label>
                 <input value={formData.staffId} name='staffId' type="number" className="form-control" placeholder='Product ID...' onChange={handleChange} />
             </div>
 

@@ -55,11 +55,26 @@ return (
     getMachinery();
   }, [])}
         
-        {(machineries.length>0 && showingCreateNewMachineryForm === false && machineryCurrentlyBeingUpdated === null) && renderMachineryTable() }
+        {(machineries.length>0 && showingCreateNewMachineryForm === false && machineryCurrentlyBeingUpdated === null) && localStorage.getItem('token')  && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead" ||
+        localStorage.getItem('Role')==="dHead")  
+        && renderMachineryTable() }
         
-        {showingCreateNewMachineryForm && <MachineryCreateForm onMachineryCreated={onMachineryCreated}/>}
+        {showingCreateNewMachineryForm && localStorage.getItem('token')  && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead" ||
+        localStorage.getItem('Role')==="dHead")  
+        && <MachineryCreateForm onMachineryCreated={onMachineryCreated}/>}
 
-        {machineryCurrentlyBeingUpdated!==null&& <MachineryUpdateForm machinery={machineryCurrentlyBeingUpdated} onMachineryUpdated={onMachineryUpdated} />}
+        {machineryCurrentlyBeingUpdated!==null && localStorage.getItem('token')  && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead" ||
+        localStorage.getItem('Role')==="dHead")  
+        && <MachineryUpdateForm machinery={machineryCurrentlyBeingUpdated} onMachineryUpdated={onMachineryUpdated} />}
     </div>
   )
   
@@ -67,7 +82,7 @@ function renderMachineryTable(){
     return(
         
         <div className='w-75 mx-auto'>
-        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <button onClick={() => setShowingCreateNewMachineryForm(true)} className='btn btn-outline-dark btn-lg w-25 float-right m-1'>Create new machinery</button>}
+        <button onClick={() => setShowingCreateNewMachineryForm(true)} className='btn btn-outline-dark btn-lg w-25 float-right m-1'>Create new machinery</button>
         <table className='table table-hover table-striped w-100 p-3 mx-auto'>
             <thead className='thead-dark'>
                 <tr>
@@ -78,8 +93,8 @@ function renderMachineryTable(){
                 <tr>
                     <th>Machinery Name</th>
                     <th>Department ID</th>                 
-                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Update</th>}
-                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Delete</th>}
+                    <th>Update</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -87,8 +102,8 @@ function renderMachineryTable(){
                     <tr key={machinery.machineryId}>
                         <td>{machinery.machineryName}</td>
                         <td>{machinery.departmentId}</td>
-                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => setMachineryCurrentlyBeingUpdated(machinery) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>}
-                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this machinery?`)) deleteMachinery(machinery.machineryId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>}
+                        <td><button onClick={() => setMachineryCurrentlyBeingUpdated(machinery) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>
+                        <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this machinery?`)) deleteMachinery(machinery.machineryId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>
                     </tr>
                 ))}
             </tbody>

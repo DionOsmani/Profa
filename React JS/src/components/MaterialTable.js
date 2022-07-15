@@ -55,11 +55,29 @@ return (
     getMaterial();
   }, [])}
         
-        {(materials.length>0 && showingCreateNewMaterialForm === false && materialCurrentlyBeingUpdated === null) && renderMaterialTable() }
+        {(materials.length>0 && showingCreateNewMaterialForm === false && materialCurrentlyBeingUpdated === null) && localStorage.getItem('token') && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead" ||
+        localStorage.getItem('Role')==="dHead" ||
+        localStorage.getItem('Role')==="worker")  
+        && renderMaterialTable() }
         
-        {showingCreateNewMaterialForm && <MaterialCreateForm onMaterialCreated={onMaterialCreated}/>}
+        {showingCreateNewMaterialForm && localStorage.getItem('token') && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead" ||
+        localStorage.getItem('Role')==="dHead" ||
+        localStorage.getItem('Role')==="worker")  
+        && <MaterialCreateForm onMaterialCreated={onMaterialCreated}/>}
 
-        {materialCurrentlyBeingUpdated!==null&& <MaterialUpdateForm material={materialCurrentlyBeingUpdated} onMaterialUpdated={onMaterialUpdated} />}
+        {materialCurrentlyBeingUpdated!==null && localStorage.getItem('token') && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead" ||
+        localStorage.getItem('Role')==="dHead" ||
+        localStorage.getItem('Role')==="worker")  
+        && <MaterialUpdateForm material={materialCurrentlyBeingUpdated} onMaterialUpdated={onMaterialUpdated} />}
     </div>
   )
   
@@ -67,7 +85,12 @@ function renderMaterialTable(){
     return(
         
         <div className='w-75 mx-auto'>
-        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <button onClick={() => setShowingCreateNewMaterialForm(true)} className='btn btn-outline-dark btn-lg w-25 float-right m-1'>Create new material</button>}
+        {localStorage.getItem('token') && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead" ||
+        localStorage.getItem('Role')==="dHead")  
+        && <button onClick={() => setShowingCreateNewMaterialForm(true)} className='btn btn-outline-dark btn-lg w-25 float-right m-1'>Create new material</button>}
         <table className='table table-hover table-striped w-100 p-3 mx-auto'>
             <thead className='thead-dark'>
                 <tr>
@@ -80,8 +103,8 @@ function renderMaterialTable(){
                     <th>Amount</th>
                     <th>Barcode</th>
                     <th>Department ID</th>                 
-                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Update</th>}
-                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Delete</th>}
+                    <th>Update</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -91,8 +114,8 @@ function renderMaterialTable(){
                         <td>{material.amount}</td>
                         <td>{material.barCode}</td>
                         <td>{material.departmentId}</td>
-                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => setMaterialCurrentlyBeingUpdated(material) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>}
-                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this material?`)) deleteMaterial(material.materialId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>}
+                        <td><button onClick={() => setMaterialCurrentlyBeingUpdated(material) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>
+                        <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this material?`)) deleteMaterial(material.materialId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>
                     </tr>
                 ))}
             </tbody>

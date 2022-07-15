@@ -7,11 +7,12 @@ export default function StaffCreateForm(props) {
         surname: "",
         email: "",
         pass: "",
-        BranchId: "",
+        branchId: "",
         phoneNumber: "",
-        age: '',
+        age: "",
         gjinia: '',
-        wage: '',
+        wage: "",
+        role: "",
     });
 
   const [formData, setFormData] = useState(initialFormData);
@@ -34,11 +35,12 @@ const handleSubmit = (e) => {
         surname: formData.surname,
         email: formData.email,
         pass: formData.pass,
-        BranchId: formData.BranchId,
+        branchId: formData.branchId,
         phoneNumber: formData.phoneNumber,
         age: formData.age,
         gjinia: formData.gjinia,
-        wage: formData.wage
+        wage: formData.wage,
+        role: formData.role
     };
 
     const url = Constants.API_URL_CREATE_STAFF;
@@ -46,8 +48,8 @@ const handleSubmit = (e) => {
     fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
-           
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify(staffToCreate)
       })
@@ -65,46 +67,50 @@ const handleSubmit = (e) => {
   return (
     <div>
         <form className='w-50 mx-auto'>
-            <h2 className='mt-2'>Create new staff</h2><br></br>
+            <h2 className='mt-2'>Create new staff</h2>
             <div className='mt-2'>
                 <label className='h5 form-label'>Staff name</label>
-                <input value={formData.firstname} name='firstname' type="text" className="form-control" placeholder='Name...' onChange={handleChange} />
+                <input value={formData.firstname} name='firstname' type="text" className="form-control" onChange={handleChange} />
             </div>
             <div className='mt-2'>
                 <label className='h5 form-label'>Staff surname</label>
-                <input value={formData.surname} name='surname' type="text" className="form-control" placeholder='Surname...' onChange={handleChange} />
+                <input value={formData.surname} name='surname' type="text" className="form-control" onChange={handleChange} />
             </div>
             <div className='mt-2'>
                 <label className='h5 form-label'>Staff email</label>
-                <input value={formData.email} name='email' type="text" className="form-control" placeholder='Email...' onChange={handleChange} />
+                <input value={formData.email} name='email' type="text" className="form-control" onChange={handleChange} />
             </div>
             <div className='mt-2'>
                 <label className='h5 form-label'>Staff pass</label>
-                <input value={formData.pass} name='pass' type="password" className="form-control" placeholder='Password...' onChange={handleChange} />
+                <input value={formData.pass} name='pass' type="password" className="form-control" onChange={handleChange} />
             </div>
             <div className='mt-2'>
                 <label className='h5 form-label'>Staff Branch Id</label>
-                <input value={formData.BranchId} name='BranchId' type="text" className="form-control" placeholder='Branch...' onChange={handleChange} />
+                <input value={formData.branchId} name='branchId' type="text" className="form-control" onChange={handleChange} />
             </div>
             <div className='mt-2'>
                 <label className='h5 form-label'>Staff phone number</label>
-                <input value={formData.phoneNumber} name='phoneNumber' type="text" className="form-control" placeholder='Phone Number...' onChange={handleChange} />
+                <input value={formData.phoneNumber} name='phoneNumber' type="text" className="form-control" onChange={handleChange} />
             </div>
             <div className='mt-2'>
                 <label className='h5 form-label'>Staff age</label>
-                <input value={formData.age} name='age' type="text" className="form-control" placeholder='Age...' onChange={handleChange} />
+                <input value={formData.age} name='age' type="text" className="form-control" onChange={handleChange} />
             </div>
             <div className='mt-2'>
                 <label className='h5 form-label'>Staff gender</label>
-                <input value={formData.gjinia} name='gjinia' type="text" className="form-control" placeholder='Gebder...' onChange={handleChange} />
+                <input value={formData.gjinia} name='gjinia' type="text" className="form-control" onChange={handleChange} />
             </div>
             <div className='mt-2'>
                 <label className='h5 form-label'>Staff wage</label>
-                <input value={formData.wage} name='wage' type="text" className="form-control" placeholder='Wage...' onChange={handleChange} />
+                <input value={formData.wage} name='wage' type="text" className="form-control" onChange={handleChange} />
+            </div> 
+            <div className='mt-2'>
+                <label className='h5 form-label'>Staff role</label>
+                <input value={formData.role} name='role' type="text" className="form-control" onChange={handleChange} />
             </div> 
 
             <button onClick={handleSubmit} className="btn btn-dark btn-lg w-100 mt-2">Submit</button>
-            <button onClick={() => props.onStaffCreated(null)} className="btn btn-secondary btn-lf 2-100 mt-2">Cancel</button>
+            <button onClick={() => props.onStaffCreated(null)} className="btn btn-secondary btn-lf 2-100 mt-3">Cancel</button>
         </form>
     </div>
   )

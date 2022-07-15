@@ -42,12 +42,14 @@ function Login(props)  {
             console.log(jwt(responseTokenFromServer));
             if(responseTokenFromServer!=""){
                 localStorage.setItem('token', responseTokenFromServer);
+                localStorage.setItem('UserID', jwt(responseTokenFromServer).UserID);
                 localStorage.setItem('Name', jwt(responseTokenFromServer).Firstname);
                 localStorage.setItem('Surname', jwt(responseTokenFromServer).Surname);
                 localStorage.setItem('Role', jwt(responseTokenFromServer).Role);
                 localStorage.setItem('Email', jwt(responseTokenFromServer).Email);
-
-                onStaffLogin();
+                console.log(responseTokenFromServer);
+                
+                // onStaffLogin();
                 
             }
             else{

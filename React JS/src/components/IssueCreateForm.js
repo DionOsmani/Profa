@@ -12,7 +12,7 @@ export default function IssueCreateForm(props) {
   
 
 const handleChange = (e) => {
-    setFormData({
+    setFormData({ 
         ...formData,
         [e.target.name]: e.target.value
     });
@@ -54,7 +54,7 @@ const handleSubmit = (e) => {
         <form className='w-50 mx-auto'>
             <h2 className='mt-2'>Create new issue</h2><br></br>
             <div className='mt-2'>
-                <label className='h5 form-label'>Issue Date</label>
+                <label className='h5 form-label'>Issue</label>
                 <input value={formData.issues} name='issues' type="text" className="form-control" placeholder='Issue...' onChange={handleChange} />
             </div>
             <div className='mt-2'>

@@ -55,11 +55,32 @@ return (
     getCustomer();
   }, [])}
         
-        {(customers.length>0 && showingCreateNewCustomerForm === false && customerCurrentlyBeingUpdated === null) && renderCustomerTable() }
+        {(customers.length>0 && showingCreateNewCustomerForm === false && customerCurrentlyBeingUpdated === null)&& 
+        localStorage.getItem('token')  && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead"  ||
+        localStorage.getItem('Role')==="dHead" ||
+        localStorage.getItem('Role')==="secretary") 
+        && renderCustomerTable() }
         
-        {showingCreateNewCustomerForm && <CustomerCreateForm onCustomerCreated={onCustomerCreated}/>}
+        {showingCreateNewCustomerForm && 
+        localStorage.getItem('token')  && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead"  ||
+        localStorage.getItem('Role')==="dHead" ||
+        localStorage.getItem('Role')==="secretary") 
+         && <CustomerCreateForm onCustomerCreated={onCustomerCreated}/>}
 
-        {customerCurrentlyBeingUpdated!==null&& <CustomerUpdateForm customer={customerCurrentlyBeingUpdated} onCustomerUpdated={onCustomerUpdated} />}
+        {customerCurrentlyBeingUpdated!==null && 
+        localStorage.getItem('token')  && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead"  ||
+        localStorage.getItem('Role')==="dHead" ||
+        localStorage.getItem('Role')==="secretary") 
+        && <CustomerUpdateForm customer={customerCurrentlyBeingUpdated} onCustomerUpdated={onCustomerUpdated} />}
     </div>
   )
   
@@ -67,7 +88,7 @@ function renderCustomerTable(){
     return(
         
         <div className='w-75 mx-auto'>
-        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <button onClick={() => setShowingCreateNewCustomerForm(true)} className='btn btn-outline-dark btn-lg w-25 float-right m-1'>Create new customer</button>}
+        <button onClick={() => setShowingCreateNewCustomerForm(true)} className='btn btn-outline-dark btn-lg w-25 float-right m-1'>Create new customer</button>
         <table className='table table-hover table-striped w-100 p-3 mx-auto'>
             <thead className='thead-dark'>
                 <tr>
@@ -79,8 +100,8 @@ function renderCustomerTable(){
                     <th>Company Name</th>
                     <th>Company Email</th>
                     <th>Company Address</th>                 
-                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Update</th>}
-                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Delete</th>}
+                    <th>Update</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -89,8 +110,8 @@ function renderCustomerTable(){
                         <td>{customer.companyName}</td>
                         <td>{customer.companyEmail}</td>
                         <td>{customer.companyAddress}</td>
-                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => setCustomerCurrentlyBeingUpdated(customer) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>}
-                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this customer?`)) deleteCustomer(customer.customerId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>}
+                        <td><button onClick={() => setCustomerCurrentlyBeingUpdated(customer) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>
+                        <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this customer?`)) deleteCustomer(customer.customerId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>
                     </tr>
                 ))}
             </tbody>

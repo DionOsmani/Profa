@@ -55,11 +55,26 @@ return (
     getIssue();
   }, [])}
         
-        {(issues.length>0 && showingCreateNewIssueForm === false && issueCurrentlyBeingUpdated === null) && renderIssueTable() }
+        {(issues.length>0 && showingCreateNewIssueForm === false && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead"  ||
+        localStorage.getItem('Role')==="dHead") 
+        && issueCurrentlyBeingUpdated === null) && renderIssueTable() }
         
-        {showingCreateNewIssueForm && <IssueCreateForm onIssueCreated={onIssueCreated}/>}
+        {showingCreateNewIssueForm && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead"  ||
+        localStorage.getItem('Role')==="dHead") 
+        && <IssueCreateForm onIssueCreated={onIssueCreated}/>}
 
-        {issueCurrentlyBeingUpdated!==null&& <IssueUpdateForm issue={issueCurrentlyBeingUpdated} onIssueUpdated={onIssueUpdated} />}
+        {issueCurrentlyBeingUpdated!==null && (
+        localStorage.getItem('Role')==="Admin" ||
+        localStorage.getItem('Role')==="HeadAdmin"  ||
+        localStorage.getItem('Role')==="bHead"  ||
+        localStorage.getItem('Role')==="dHead") 
+        && <IssueUpdateForm issue={issueCurrentlyBeingUpdated} onIssueUpdated={onIssueUpdated} />}
     </div>
   )
   
@@ -78,8 +93,8 @@ function renderIssueTable(){
                 <tr>
                     <th>Issue</th>
                     <th>Staff ID</th>             
-                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Update</th>}
-                    {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <th>Delete</th>}
+                    <th>Update</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -87,8 +102,8 @@ function renderIssueTable(){
                     <tr key={issue.issuesId}>
                         <td>{issue.issues}</td>
                         <td>{issue.staffId}</td>
-                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => setIssueCurrentlyBeingUpdated(issue) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>}
-                        {localStorage.getItem('token') && localStorage.getItem('Role')=="Admin" && <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this issue?`)) deleteIssue(issue.issuesId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>}
+                        <td><button onClick={() => setIssueCurrentlyBeingUpdated(issue) } className='btn btn-dark btn-lg mx-3 my-3'>Update</button></td>
+                        <td><button onClick={() => {if(window.confirm(`Are you sure you want to delete this issue?`)) deleteIssue(issue.issuesId)}} className='btn btn-secondary btn-lg mx-3 my-3'>Delete</button></td>
                     </tr>
                 ))}
             </tbody>
